@@ -4,7 +4,7 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.0.1 | - |
+| 0.0.1 | :heavy_minus_sign: |
 
 ## Reporting a Vulnerability
 
