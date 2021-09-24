@@ -1,13 +1,19 @@
+// extern crate elliptic_curve;
 mod elliptic_curve;
+mod action;
 
-use elliptic_curve::Point;
-use elliptic_curve::Action;
+use elliptic_curve::curve as curve;
+use elliptic_curve::point as point;
+
+use curve::EllipticCurve;
+use point::Point;
+use action::Action;
 
 fn input_action() -> Action {
     println!("Enter 1 for register, 2 for auth, 0 to quit");
     let mut input = String::new();
     std::io::stdin().read_line(&mut input).unwrap();
-    let n: i32 = input.trim().parse().unwrap();
+    let n: i32 = input.trim().parse().unwrap_or(-1);
     match n {
         0 => std::process::exit(0),
         1 => Action::Register,
@@ -42,6 +48,8 @@ fn main() {
         y: 3
     };
     let c = a.add(&b);
+    let e = EllipticCurve {order: 11, o:a, g:b};
+    println!("{}",e.order);
     println!("{} {}",c.x,c.y);
     let action = input_action();
     match action {
