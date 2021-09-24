@@ -1,8 +1,4 @@
-// use std::env;
-mod other;
-mod setup;
 mod elliptic_curve;
-// mod point;
 
 use elliptic_curve::Point;
 use elliptic_curve::Action;
