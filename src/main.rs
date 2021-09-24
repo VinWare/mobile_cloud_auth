@@ -2,15 +2,25 @@
 mod other;
 mod setup;
 mod elliptic_curve;
+// mod point;
 
 use elliptic_curve::Point;
+use elliptic_curve::Action;
 
-fn input_action() -> i32 {
-    println!("Enter 1 for register, 2 for auth");
+fn input_action() -> Action {
+    println!("Enter 1 for register, 2 for auth, 0 to quit");
     let mut input = String::new();
     std::io::stdin().read_line(&mut input).unwrap();
     let n: i32 = input.trim().parse().unwrap();
-    return n;
+    match n {
+        0 => std::process::exit(0),
+        1 => Action::Register,
+        2 => Action::Authenticate,
+        _ => {
+            println!("Please enter one of the valid values");
+            input_action()
+        },
+    }
 }
 fn register() {
     println!("register")
@@ -27,8 +37,6 @@ fn auth() {
 // }
 fn main() {
     // read_env();
-    setup::setup();
-    other::other();
     let a = Point {
         x:1,
         y:2
@@ -41,12 +49,7 @@ fn main() {
     println!("{} {}",c.x,c.y);
     let action = input_action();
     match action {
-        1 => register(),
-        2 => auth(),
-        _ => {
-            println!("error");
-            std::process::exit(1)
-        }
+        Action::Register => register(),
+        Action::Authenticate => auth(),
     }
-    // println!("Hello, world!");
 }
