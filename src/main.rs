@@ -47,10 +47,10 @@ fn main() {
         x: 2,
         y: 3
     };
-    let c = a.add(&b);
+    // let c = a.add(&b);
     let e = EllipticCurve {order: 11, o:a, g:b};
     println!("{}",e.order);
-    println!("{} {}",c.x,c.y);
+    // println!("{} {}",c.x,c.y);
     let action = input_action();
     match action {
         Action::Register => register(),
