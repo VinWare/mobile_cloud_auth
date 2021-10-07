@@ -9,35 +9,47 @@ fn ext_euc_algo(first: i32, second: i32) -> (i32,i32,i32) {
     let (r_2,r_1) = (std::cmp::max(first, second), std::cmp::min(first, second));
     recurse_ext_euc_algo(r_2,r_1,1,0,0,1)
 }
-pub fn mod_mul(first: i32, second: i32, m: i32) -> i32{
+pub struct ModField {
+    pub m: i32
+}
+impl ModField {
+    pub fn add(&self, first: i32, second: i32) ->i32 {
+        self.mod_m(self.mod_m(first)+self.mod_m(second))
+    }
+    pub fn sub(&self, first:i32, second:i32) -> i32 {
+         self.add(first,-second)
+    }
+pub fn mul(&self, first: i32, second: i32) -> i32{
     let mut res = 0;
     // let first = if first < 0 {first + (first/m)*m + m} else {first};
     // let second = if second < 0 {second + (second/m)*m + m} else {second};
-    let (mut a, mut b) = (mod_m(first, m), mod_m(second,m));
+    let (mut a, mut b) = (self.mod_m(first), self.mod_m(second));
     while b > 0 {
-        if b & 1 != 0 {res = (res + a) % m;}
+        if b & 1 != 0 {res = self.add(res,a);}
         a <<= 1;
         b >>= 1;
     }
     return res;
 }
-pub fn mod_div(num : i32, den: i32, m: i32) -> i32 {
-    let den = mod_m(den,m);
-            let (_,_,den_inv) = ext_euc_algo(m,den%m);
-            return mod_mul(num,den_inv,m);
+pub fn div(&self, num : i32, den: i32) -> i32 {
+    // let den = self.mod(den);
+            let (_,_,den_inv) = ext_euc_algo(self.m,self.mod_m(den));
+            return self.mul(num,den_inv);
 }
-pub fn mod_exp(base: i32, exp: i32, m: i32) -> i32 {
+pub fn exp(&self,base: i32, exp: i32) -> i32 {
     let mut res = 1;
     // let base = 
-    let (mut a, mut b) = (mod_m(base,m), mod_m(exp,m));
+    let (mut a, mut b) = (self.mod_m(base), self.mod_m(exp));
     while b > 0{
-        if b & 1 != 0 {res = mod_mul(res,a,m);}
-        a = mod_mul(a,a,m);
+        if b & 1 != 0 {res = self.mul(res,a);}
+        a = self.mul(a,a);
         b >>= 1;
     }
     return res;
 }
-pub fn mod_m(num:i32,m:i32) -> i32{
+pub fn mod_m(&self, num:i32) -> i32{
+    let m = self.m;
     let num = if num < 0 {num + (num/m)*m + m} else {num};
     return num%m;
 }
+} 
