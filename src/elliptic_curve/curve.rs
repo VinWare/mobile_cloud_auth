@@ -21,26 +21,27 @@ pub struct EllipticCurve {
 }
 
 impl EllipticCurve {
-fn sum_finite_points(&self, p: FinitePoint, q: FinitePoint) -> FinitePoint {
-    let m = ModField{m:self.p};
-    let (num,den) = if p != q {
-        let num = m.sub(q.y,p.y);
-        let den = m.sub(q.x,p.x);
-        (num,den)
-    } else {
-        let num = m.add(m.mul(3,m.exp(p.x,2)),self.a);
-        let den = m.mul(2,p.y);
-        (num,den)
-    };
-    let lambda = m.div(num,den);
-    let r_x = m.sub(m.exp(lambda,2),m.add(p.x,q.x));
-    let r_y = m.sub(m.mul(lambda,m.sub(p.x,r_x)),p.y);
-    FinitePoint{x:r_x,y:r_y}
-}
+    fn sum_finite_points(&self, p: FinitePoint, q: FinitePoint) -> FinitePoint {
+        let m = ModField{m:self.p};
+        let (num,den) = if p != q {
+            let num = m.sub(q.y,p.y);
+            let den = m.sub(q.x,p.x);
+            (num,den)
+        } else {
+            let num = m.add(m.mul(3,m.exp(p.x,2)),self.a);
+            let den = m.mul(2,p.y);
+            (num,den)
+        };
+        let lambda = m.div(num,den);
+        let r_x = m.sub(m.exp(lambda,2),m.add(p.x,q.x));
+        let r_y = m.sub(m.mul(lambda,m.sub(p.x,r_x)),p.y);
+        FinitePoint{x:r_x,y:r_y}
+    }
     pub fn add(&self, point_p: Point, point_q: Point) -> Point{
      if let Point::Fin(p) = point_p {
          if let Point::Fin(q) = point_q {
              if p == -q {Point::Inf}
+
              else {Point::Fin(self.sum_finite_points(p,q))}
          } else {point_p}
      } else {
